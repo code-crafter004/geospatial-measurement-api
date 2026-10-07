@@ -5,7 +5,7 @@ from pathlib import Path
 import geopandas as gpd
 from shapely.geometry import Polygon
 
-out = Path("/Users/apple/geospatial-measurement-api/samples/plots")
+out = Path(__file__).resolve().parent.parent / "samples" / "plots"
 tmp = Path(tempfile.mkdtemp())
 
 gdf = gpd.GeoDataFrame(

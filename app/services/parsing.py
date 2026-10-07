@@ -9,6 +9,7 @@ import pyogrio
 
 MAX_UNCOMPRESSED_BYTES = 200 * 1024 * 1024
 MAX_ZIP_MEMBERS = 500
+KML_NOISE_KEYS = {"tessellate", "extrude", "visibility", "drawOrder", "altitudeMode", "icon"}
 
 
 class ParseError(Exception):
@@ -30,6 +31,13 @@ class ParsedFile:
     features: list[ParsedFeature]
 
 
+def _clean_properties(props: dict | None, kml: bool) -> dict:
+    props = props or {}
+    if not kml:
+        return props
+    return {k: v for k, v in props.items() if v is not None and k not in KML_NOISE_KEYS}
+
+
 def _crs_label(crs) -> str:
     epsg = crs.to_epsg()
     if epsg:
@@ -40,7 +48,9 @@ def _crs_label(crs) -> str:
     return f"custom:{crs.name}"[:50]
 
 
-def _frame_to_features(gdf, layer: str | None, start: int) -> list[ParsedFeature]:
+def _frame_to_features(
+    gdf, layer: str | None, start: int, kml: bool = False
+) -> list[ParsedFeature]:
     geom_types = list(gdf.geometry.geom_type)
     collection = json.loads(gdf.to_json())
     features = []
@@ -51,7 +61,7 @@ def _frame_to_features(gdf, layer: str | None, start: int) -> list[ParsedFeature
                 layer=layer,
                 geometry_type=gtype if isinstance(gtype, str) else None,
                 geometry=feat.get("geometry"),
-                properties=feat.get("properties") or {},
+                properties=_clean_properties(feat.get("properties"), kml),
             )
         )
     return features
@@ -89,7 +99,9 @@ def parse_kml(path: Path) -> ParsedFile:
             ) from exc
         if gdf.empty:
             continue
-        features.extend(_frame_to_features(gdf, layer_name, len(features)))
+        # GDAL names an unnamed KML layer after the stored file; hide that internal name.
+        shown = None if layer_name == path.stem else layer_name
+        features.extend(_frame_to_features(gdf, shown, len(features), kml=True))
 
     # KML is always WGS84 lon/lat by specification.
     return ParsedFile(crs="EPSG:4326", features=features)

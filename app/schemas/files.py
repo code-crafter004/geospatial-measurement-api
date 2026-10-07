@@ -29,4 +29,6 @@ class MeasurementsOut(BaseModel):
     id: str
     crs: str | None = None
     feature_count: int
+    limit: int
+    offset: int
     features: list[FeatureOut]
