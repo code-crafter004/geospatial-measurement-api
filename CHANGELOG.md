@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.7.0
+- Dockerfile, docker-compose, healthcheck, non-root user, persistent data volume
+
 ## v0.6.0
 - Edge case tests: multi folder KML, empty and garbage KML, 3D coordinates, projected shapefile in feet
 

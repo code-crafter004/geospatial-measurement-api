@@ -1,0 +1,14 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      MAX_UPLOAD_MB: "25"
+      LOG_LEVEL: "INFO"
+    volumes:
+      - geo-data:/data
+    restart: unless-stopped
+
+volumes:
+  geo-data:
