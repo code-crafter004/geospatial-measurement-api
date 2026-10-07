@@ -62,7 +62,7 @@ def get_measurements(file_id: str, db: Session = Depends(get_db)):
                 geometry=r.geometry,
                 crs=r.crs,
                 properties=r.properties,
-                measurement=None,  # filled in v0.4.0
+                measurement=r.measurement,
             )
             for r in rows
         ],

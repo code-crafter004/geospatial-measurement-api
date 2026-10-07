@@ -1,7 +1,7 @@
 [tool.ruff]
 line-length = 100
 
-[tool.ruff.lint]
+[tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = ["fastapi.Depends", "fastapi.File"]
 
 [tool.pytest.ini_options]

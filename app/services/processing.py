@@ -4,6 +4,7 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 
 from app.db.models import Feature, FileStatus, UploadedFile
+from app.services.measurement import measure_geometry
 from app.services.parsing import ParseError, parse_file
 
 logger = logging.getLogger(__name__)
@@ -32,6 +33,7 @@ def process_file(db: Session, record: UploadedFile) -> UploadedFile:
                 geometry=f.geometry,
                 crs=parsed.crs,
                 properties=f.properties,
+                measurement=measure_geometry(f.geometry, parsed.crs),
             )
             for f in parsed.features
         )

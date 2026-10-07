@@ -50,3 +50,4 @@ class Feature(Base):
     geometry: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     crs: Mapped[str] = mapped_column(String(50))
     properties: Mapped[dict] = mapped_column(JSON, default=dict)
+    measurement: Mapped[dict | None] = mapped_column(JSON, nullable=True)
