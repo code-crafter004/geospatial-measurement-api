@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.0
+- Complete README: setup, API, architecture, design decisions, learnings, future scope
+- First public release
+
 ## v0.7.0
 - Dockerfile, docker-compose, healthcheck, non-root user, persistent data volume
 
